@@ -10,8 +10,32 @@ import {
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
+import { useState } from "react";
 
 export default function App() {
+  //addTodo
+  //input창에서 엔터를 누르면 todo가 추가된다.
+
+  //  2.구조를 잡은 데이터에서 text와 category값을 만듬
+  const [text, setText] = useState("");
+  const [todos, setTodos] = useState([]);
+  const [category, setCategory] = useState(""); //js,react,ct
+
+  // 1.데이터 구조를 잡는다.
+  const newTodo = {
+    text,
+    isEdit: false,
+    isDone: false,
+    id: Date.now(),
+    category,
+  };
+
+  // 3.기존 todo값에 접근을 해서 settodos 만들기
+  const addTodo = () => {
+    setTodos((prev) => [...prev, newTodo]);
+    setText("");
+  };
+
   return (
     <SafeAreaView style={styles.safearea}>
       <StatusBar style="auto" />
@@ -29,37 +53,44 @@ export default function App() {
         </View>
         <View style={styles.inputWrapper}>
           <TextInput
+            // 4.위에서 구조를 잡은 값들을 넣기
+            value={text}
+            onChangeText={setText}
+            onSubmitEditing={addTodo}
             placeholder="Add your Todo"
             style={styles.input}
           ></TextInput>
         </View>
 
         <ScrollView>
-          <View style={styles.task}>
-            <Text>텍스트렌더링부분</Text>
-            <View style={{ flexDirection: "row" }}>
-              <TouchableOpacity>
-                <AntDesign name="checksquare" size={24} color="black" />
-              </TouchableOpacity>
+          {/* 5.맵 만들어주기 */}
+          {todos.map((todo) => (
+            <View style={styles.task} key={todo.id}>
+              <Text>{todo.text}</Text>
+              <View style={{ flexDirection: "row" }}>
+                <TouchableOpacity>
+                  <AntDesign name="checksquare" size={24} color="black" />
+                </TouchableOpacity>
 
-              <TouchableOpacity>
-                <Feather
-                  style={{ marginLeft: 10 }}
-                  name="edit"
-                  size={24}
-                  color="black"
-                />
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <AntDesign
-                  style={{ marginLeft: 10 }}
-                  name="delete"
-                  size={24}
-                  color="black"
-                />
-              </TouchableOpacity>
+                <TouchableOpacity>
+                  <Feather
+                    style={{ marginLeft: 10 }}
+                    name="edit"
+                    size={24}
+                    color="black"
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <AntDesign
+                    style={{ marginLeft: 10 }}
+                    name="delete"
+                    size={24}
+                    color="black"
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
+          ))}
         </ScrollView>
       </View>
     </SafeAreaView>
